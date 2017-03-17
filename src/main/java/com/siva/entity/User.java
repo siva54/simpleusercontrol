@@ -1,16 +1,22 @@
 package com.siva.entity;
 
+import javax.validation.constraints.NotNull;
+
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import com.siva.enums.Gender;
 
 //@DynamoDBTable(tableName = "user")
 @Document(collection = "user")
 public class User {
+	@NotNull
+	private String userId;
 
 	// @DynamoDBHashKey
 	// @DynamoDBAttribute
 	private String firstName;
 
-	// @DynamoDBHashKey
+	// @DynamoDBHashKeys
 	// @DynamoDBAttribute
 	private String lastName;
 
@@ -21,29 +27,31 @@ public class User {
 	private String email;
 
 	// @DynamoDBAttribute
-	// private String gender;
-
-	// public User(String firstName, String lastName, Integer age, String email)
-	// {// ,
-	// // String
-	// // gender)
-	// // {
-	// super();
-	// this.firstName = firstName;
-	// this.lastName = lastName;
-	// this.age = age;
-	// this.email = email;
-	// // this.gender = Gender.getGenderEnumFromValue(gender);
-	// }
+	private Gender gender;
 
 	public User() {
 	}
 
-	/*
-	 * public User(String firstName, String lastName, String age, String email)
-	 * { super(); this.firstName = firstName; this.lastName = lastName; this.age
-	 * = age; this.email = email; }
+	
+	
+	/**
+	 * @return the userId
 	 */
+	public String getUserId() {
+		return userId;
+	}
+
+
+
+	/**
+	 * @param userId the userId to set
+	 */
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+
+
+
 	/**
 	 * @return the firstName
 	 */
@@ -104,18 +112,18 @@ public class User {
 		this.email = email;
 	}
 
-	// /**
-	// * @return the gender
-	// */
-	// public Gender getGender() {
-	// return gender;
-	// }
-	//
-	// /**
-	// * @param gender
-	// * the gender to set
-	// */
-	// public void setGender(Gender gender) {
-	// this.gender = gender;
-	// }
+	/**
+	 * @return the gender
+	 */
+	public Gender getGender() {
+		return gender;
+	}
+
+	/**
+	 * @param gender
+	 *            the gender to set
+	 */
+	public void setGender(Gender gender) {
+		this.gender = gender;
+	}
 }

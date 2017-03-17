@@ -4,57 +4,65 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
-import com.mongodb.Mongo;
-import com.mongodb.MongoClient;
-import com.mongodb.MongoClientURI;
 import com.siva.dao.spi.UserOperationsDAO;
 import com.siva.entity.User;
+import com.siva.enums.CollectionsEnum;
+import com.siva.enums.UserCollectionEnum;
 
 @Repository
 public class UserOperationsDAOImpl implements UserOperationsDAO {
 
 	@Autowired
-	MongoTemplate mongoTemplate;
+	private MongoTemplate mongoTemplate;
 
 	@Override
 	public void createUser(User user) throws Exception {
 
-		//		mongoTemplate = new MongoTemplate(mongo(), "user");
-		mongoTemplate.insert(user, "user");
+		Query idSearchQuery = new Query(Criteria.where(UserCollectionEnum.ID.getColumnName()).is(user.getUserId()));
+
+		User finalUserDetail = new User();
+
+		User existingUser = mongoTemplate.findOne(idSearchQuery, User.class, CollectionsEnum.USER.getCollectionName());
+
+		if (existingUser != null) {
+			finalUserDetail = existingUser;
+			if (user.getAge() != null) {
+				finalUserDetail.setAge(user.getAge());
+			}
+			if (user.getEmail() != null) {
+				finalUserDetail.setEmail(user.getEmail());
+			}
+			if (user.getFirstName() != null) {
+				finalUserDetail.setFirstName(user.getFirstName());
+			}
+			if (user.getLastName() != null) {
+				finalUserDetail.setLastName(user.getLastName());
+			}
+			if (user.getGender() != null) {
+				finalUserDetail.setGender(user.getGender());
+			}
+			mongoTemplate.remove(idSearchQuery, CollectionsEnum.USER.getCollectionName());
+		} else {
+			finalUserDetail = user;
+		}
+
+		mongoTemplate.insert(finalUserDetail, "user");
 	}
 
 	@Override
-	public List<User> getUser() throws Exception {
-//		mongoTemplate = new MongoTemplate(mongo(), "user");
-		return mongoTemplate.find(new Query(), User.class, "user");
+	public List<User> getUsers() throws Exception {
+		return mongoTemplate.find(new Query(), User.class, CollectionsEnum.USER.getCollectionName());
 	}
 
-	public Mongo mongo() throws Exception {
-
-		// MongoClientOptions.Builder optionsBuilder =
-		// MongoClientOptions.builder().writeConcern(WriteConcern.W1)
-		// .readPreference(ReadPreference.primary()).connectionsPerHost(10).connectTimeout(15000)
-		// .maxWaitTime(300000).socketTimeout(600000).threadsAllowedToBlockForConnectionMultiplier(1500);
-		//
-		// MongoClientOptions options = optionsBuilder.build();
-
-		System.out.println("Accessing MONGO DB:");
-
-		StringBuilder sb = new StringBuilder();
-		// sb.append("mongodb://" + mongoUserName + ":" + mongoPassword + "@" +
-		// mongoEndpoint + ":27017/" + mongoDBName);
-		// String mongoDBStr =
-		// "mongodb://admin:zQMBni59K1me@127.12.219.2:27017/user";
-		String mongoDBStr = "mongodb://localhost:27017/user";
-		// System.out.println("MONGO URL:" + sb.toString());
-
-		MongoClientURI uri = new MongoClientURI(mongoDBStr);
-		MongoClient client = new MongoClient(uri);
-
-		return client;
+	@Override
+	public List<User> getUsersBasedOnName(String firstName, String lastName) throws Exception {
+		return mongoTemplate.find(
+				new Query(Criteria.where(UserCollectionEnum.FIRSTNAME.getColumnName()).is(firstName)
+						.where(UserCollectionEnum.LASTNAME.getColumnName()).is(lastName)),
+				User.class, CollectionsEnum.USER.getCollectionName());
 	}
-
 }

@@ -1,37 +1,34 @@
 package com.siva.enums;
 
-import org.apache.commons.lang3.StringUtils;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum Gender {
-	MALE("M"), FEMALE("F");
+	MALE, FEMALE;
 
-	private String genderCategory;
+	private static Map<String, Gender> genderMap = new HashMap<>();
 
-	Gender(String genderCategory) {
-		this.genderCategory = genderCategory;
+	static {
+		genderMap.put("m", MALE);
+		genderMap.put("f", FEMALE);
 	}
 
-	/**
-	 * @return the genderCategory
-	 */
-	public String getGenderCategory() {
-		return genderCategory;
+	@JsonCreator
+	public static Gender forValue(String value) {
+		return genderMap.get(value);
 	}
 
-	/**
-	 * @param genderCategory
-	 *            the genderCategory to set
-	 */
-	public void setGenderCategory(String genderCategory) {
-		this.genderCategory = genderCategory;
-	}
-
-	public static Gender getGenderEnumFromValue(String genderCategory) {
-		Gender result = null;
-
-		for (Gender gender : Gender.values()) {
-			if (StringUtils.equals(genderCategory, gender.getGenderCategory())) {
-				result = gender;
+	@JsonValue
+	public String toValue() {
+		String result = null;
+		for (Entry<String, Gender> entry : genderMap.entrySet()) {
+			if (entry.getValue() == this) {
+				result = entry.getKey();
+				break;
 			}
 		}
 		return result;

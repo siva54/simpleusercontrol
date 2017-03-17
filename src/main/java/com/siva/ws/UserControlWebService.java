@@ -3,6 +3,7 @@ package com.siva.ws;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.siva.business.spi.UserControlService;
 import com.siva.entity.User;
+import com.siva.exceptions.MyApplicationException;
 
 @RestController
 @RequestMapping(path = "/user")
@@ -34,12 +36,18 @@ public class UserControlWebService {
 	 */
 	@PostMapping(path = "/create", consumes = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<String> createUser(@RequestBody User user) {
-		ResponseEntity<String> responseEntity = new ResponseEntity<String>(HttpStatus.CREATED);
+		ResponseEntity<String> responseEntity = null;
 
 		try {
 			userControlService.createUser(user);
+			responseEntity = new ResponseEntity<String>(HttpStatus.CREATED);
+		} catch (MyApplicationException myApplicationException) {
+			// All Known exceptions
+			responseEntity = new ResponseEntity<String>(myApplicationException.getMessage(),
+					HttpStatus.INTERNAL_SERVER_ERROR);
 		} catch (Exception exception) {
-			
+			// All unexpected exceptions
+			responseEntity = new ResponseEntity<String>(exception.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return responseEntity;
 	}
@@ -54,10 +62,27 @@ public class UserControlWebService {
 	@GetMapping(path = "/get", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<List<User>> getUser(@RequestParam(value = "firstname", required = false) String firstName,
 			@RequestParam(value = "lastname", required = false) String lastName) {
+
+		ResponseEntity<List<User>> responseEntity = null;
 		List<User> data = new ArrayList<>();
 
-		data = userControlService.getUsers(firstName, lastName);
+		try {
 
-		return new ResponseEntity<List<User>>(data, HttpStatus.ACCEPTED);
+			data = userControlService.getUsers(firstName, lastName);
+
+			if (CollectionUtils.isEmpty(data)) {
+				responseEntity = new ResponseEntity<List<User>>(HttpStatus.NO_CONTENT);
+			} else {
+				responseEntity = new ResponseEntity<List<User>>(data, HttpStatus.OK);
+			}
+		} catch (MyApplicationException myApplicationException) {
+			// All Known exceptions
+			responseEntity = new ResponseEntity<List<User>>(HttpStatus.INTERNAL_SERVER_ERROR);
+		} catch (Exception exception) {
+			// All unexpected exceptions
+			responseEntity = new ResponseEntity<List<User>>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+		return responseEntity;
 	}
 }

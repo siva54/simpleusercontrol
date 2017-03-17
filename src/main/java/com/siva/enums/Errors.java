@@ -1,7 +1,9 @@
 package com.siva.enums;
 
 public enum Errors {
-	DATASOURCE_CONNECTION_FAILED("E1000", "Database connection failed");
+	// Database related exceptions
+	DATASOURCE_CONNECTION_FAILED("E1000", "Database connection failed"),
+	DATABASE_CALL_FAILED("E1001", "Database connection failed");
 
 	private String errorCode;
 	private String errorDescription;

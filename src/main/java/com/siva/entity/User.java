@@ -6,34 +6,24 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.siva.enums.Gender;
 
-//@DynamoDBTable(tableName = "user")
 @Document(collection = "user")
 public class User {
 	@NotNull
 	private String userId;
 
-	// @DynamoDBHashKey
-	// @DynamoDBAttribute
 	private String firstName;
 
-	// @DynamoDBHashKeys
-	// @DynamoDBAttribute
 	private String lastName;
 
-	// @DynamoDBAttribute
 	private String age;
 
-	// @DynamoDBAttribute
 	private String email;
 
-	// @DynamoDBAttribute
 	private Gender gender;
 
 	public User() {
 	}
 
-	
-	
 	/**
 	 * @return the userId
 	 */
@@ -41,16 +31,13 @@ public class User {
 		return userId;
 	}
 
-
-
 	/**
-	 * @param userId the userId to set
+	 * @param userId
+	 *            the userId to set
 	 */
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
-
-
 
 	/**
 	 * @return the firstName

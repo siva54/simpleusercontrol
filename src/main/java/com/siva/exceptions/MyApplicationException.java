@@ -9,7 +9,7 @@ public class MyApplicationException extends Exception {
 
 	public MyApplicationException(Errors error, Object[] params, Throwable throwable) {
 		super(throwable);
-		this.errorCode = errorCode;
-		this.errorDescription = errorDescription;
+		this.errorCode = error.getErrorCode();
+		this.errorDescription = error.getErrorDescription();
 	}
 }

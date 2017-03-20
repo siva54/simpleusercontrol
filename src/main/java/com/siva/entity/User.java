@@ -1,15 +1,14 @@
 package com.siva.entity;
 
-import javax.validation.constraints.NotNull;
-
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import com.siva.enums.Gender;
+import com.siva.enums.GenderEnum;
 
 @Document(collection = "user")
 public class User {
-	@NotNull
-	private String userId;
+	@Id
+	private String _id;
 
 	private String firstName;
 
@@ -19,24 +18,24 @@ public class User {
 
 	private String email;
 
-	private Gender gender;
+	private GenderEnum gender;
 
 	public User() {
 	}
 
 	/**
-	 * @return the userId
+	 * @return the id
 	 */
-	public String getUserId() {
-		return userId;
+	public String getId() {
+		return _id;
 	}
 
 	/**
-	 * @param userId
+	 * @param id
 	 *            the userId to set
 	 */
-	public void setUserId(String userId) {
-		this.userId = userId;
+	public void setId(String id) {
+		this._id = id;
 	}
 
 	/**
@@ -102,7 +101,7 @@ public class User {
 	/**
 	 * @return the gender
 	 */
-	public Gender getGender() {
+	public GenderEnum getGender() {
 		return gender;
 	}
 
@@ -110,7 +109,14 @@ public class User {
 	 * @param gender
 	 *            the gender to set
 	 */
-	public void setGender(Gender gender) {
+	public void setGender(GenderEnum gender) {
 		this.gender = gender;
+	}
+
+	@Override
+	public String toString() {
+		return getFirstName() + " " + getLastName() + " is a " + getGender().toString() + " and is of age" + getAge()
+				+ " years ";
+
 	}
 }

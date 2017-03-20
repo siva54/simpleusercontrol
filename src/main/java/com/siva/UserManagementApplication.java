@@ -1,7 +1,6 @@
 package com.siva;
 
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,14 +13,13 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-@SpringBootApplication
 @ImportResource("classpath:spring/application-context.xml")
 @RestController
 @EnableSwagger2
-public class SimpleUserControlApplication {
+public class UserManagementApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(SimpleUserControlApplication.class, args);
+		SpringApplication.run(UserManagementApplication.class, args);
 	}
 
 	@GetMapping(value = "/")

@@ -13,7 +13,7 @@
 	<context:annotation-config />
 	<context:component-scan base-package="com.siva.*" />
 
-	<bean
+	<!-- <bean
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<property name="locations">
 			<list>
@@ -55,5 +55,5 @@
 		<constructor-arg name="userName" value="${mongodb.user}" />
 		<constructor-arg name="source" value="${mongodb.database.name}" />
 		<constructor-arg name="password" value="${mongodb.password}" />
-	</bean>
+	</bean> -->
 </beans>

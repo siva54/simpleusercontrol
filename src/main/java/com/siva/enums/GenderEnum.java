@@ -6,11 +6,12 @@ import java.util.Map.Entry;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.siva.exceptions.MyApplicationException;
 
-public enum Gender {
+public enum GenderEnum {
 	MALE, FEMALE;
 
-	private static Map<String, Gender> genderMap = new HashMap<>();
+	private static Map<String, GenderEnum> genderMap = new HashMap<>();
 
 	static {
 		genderMap.put("m", MALE);
@@ -18,14 +19,15 @@ public enum Gender {
 	}
 
 	@JsonCreator
-	public static Gender forValue(String value) {
-		return genderMap.get(value);
+	public static GenderEnum forValue(String value) throws MyApplicationException {
+		GenderEnum genderEnum = genderMap.get(value);
+		return genderEnum;
 	}
 
 	@JsonValue
 	public String toValue() {
 		String result = null;
-		for (Entry<String, Gender> entry : genderMap.entrySet()) {
+		for (Entry<String, GenderEnum> entry : genderMap.entrySet()) {
 			if (entry.getValue() == this) {
 				result = entry.getKey();
 				break;
